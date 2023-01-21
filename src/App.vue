@@ -1,29 +1,49 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, onMounted, computed, watch } from 'vue'
+
+const todos = ref([])
+const name = ref(' ')
+
+const input_content = ref('')
+const input_category = ref(null)
+
+const todos_asc = computed(() => todos.value.sort((a, b) => {
+  return b.createdAt = a.createdAt
+}))
+
+const addTodo = () => {}
+
+watch(name, (newVal) => {
+  localStorage.setItem('name', newVal)
+})
+
+onMounted(() => {
+  name.value = localStorage.getItem('name') || ''
+})
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-</template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+  <main class="app">
+    <section class="greeting">
+      <h2 class="tittle">
+        What's up, <input type="text" placeholder="Name Here" v-model="name" />
+      </h2>
+    </section>
+
+    <section class="create-todo">
+      <h3>CREATE A TODO</h3>
+
+      <form @submit.prevent="addTodo">
+        <h4>Whate's on your todo list?</h4>
+        <input 
+          type="text" 
+          placeholder="e.g.make a video" 
+          v-model="input_content" />
+
+        <h4>Pick a category</h4>
+      </form>
+    </section>
+  </main>
+
+</template>
