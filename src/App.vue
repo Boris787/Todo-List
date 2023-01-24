@@ -11,7 +11,22 @@ const todos_asc = computed(() => todos.value.sort((a, b) => {
   return b.createdAt = a.createdAt
 }))
 
-const addTodo = () => {}
+const addTodo = () => {
+  if(input_content.value.trim() === ' ' || input_category.value === null) {
+    return
+  }
+
+  todos.value.push({
+    content: input_content.value,
+    category: input_category.value,
+    done: false,
+    createdAt: new Date().getTime()
+  })
+}
+
+watch(todos, newVal => {
+  localStorage.setItem('todos', JSON.stringify(newVal))
+}, { deep: true })
 
 watch(name, (newVal) => {
   localStorage.setItem('name', newVal)
@@ -42,6 +57,24 @@ onMounted(() => {
           v-model="input_content" />
 
         <h4>Pick a category</h4>
+
+        <div class="options">
+
+          <label>
+            <input type="radio" name="category" value="business" v-model="input_category">
+            <span class="bubble business"></span>
+            <div>Bussines</div>
+          </label>
+
+          <label>
+            <input type="radio" name="category" value="personal" v-model="input_category">
+            <span class="bubble personal"></span>
+            <div>Personal</div>
+          </label>
+
+        </div>
+
+        <input type="submit" value="Add todo" />
       </form>
     </section>
   </main>
